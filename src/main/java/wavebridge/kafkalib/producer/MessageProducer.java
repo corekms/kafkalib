@@ -1,4 +1,4 @@
-package wavebridge.kafkalib;
+package wavebridge.kafkalib.producer;
 
 import lombok.extern.slf4j.Slf4j;
 import wavebridge.kafkalib.util.ProducerProperties;
@@ -12,15 +12,15 @@ import org.apache.kafka.clients.producer.RecordMetadata;
  * 주의 : 
  */
 @Slf4j
-public class messageProducer {
+public class MessageProducer {
 
   private static final Producer<String, Object> producer = new KafkaProducer<>(ProducerProperties.getProducerProperties());
   private final String topicName = ProducerProperties.getTopicName();
   private static class InstanceHolder {
-    public static messageProducer producerInstance = new messageProducer();
+    public static MessageProducer producerInstance = new MessageProducer();
   }
 
-  public static messageProducer getInstance() {
+  public static MessageProducer getInstance() {
     // producer = new KafkaProducer<>(ProducerProperties.getProducerProperties());
     log.debug("===========================================================");
     log.debug("Initializing UserDataProducer : producer : {}", producer.hashCode());
@@ -87,7 +87,7 @@ public class messageProducer {
     sendUserDataCommit(key, messageToSend, topicName);
   }
   public void close() {
-    messageProducer.producer.close();
+    MessageProducer.producer.close();
   }
 
   public void close(Producer<String, Object> producer) {

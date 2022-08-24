@@ -1,4 +1,4 @@
-package wavebridge.kafkalib;
+package wavebridge.kafkalib.producer;
 
 import java.util.Map;
 

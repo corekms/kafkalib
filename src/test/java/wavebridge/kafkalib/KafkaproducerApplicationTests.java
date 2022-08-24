@@ -5,6 +5,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.junit.jupiter.api.Test;
 
+import wavebridge.kafkalib.producer.MessageProducer;
 import wavebridge.kafkalib.util.ProducerProperties;
 
 @SpringBootTest
@@ -25,14 +26,14 @@ class KafkaproducerApplicationTests {
 
   @Test
   public void testSyncProducer() throws Exception {
-    messageProducer userDataProducer = messageProducer.getInstance();
+    MessageProducer userDataProducer = MessageProducer.getInstance();
 
     int cnt = 0;
     while(cnt < 5) {
       userDataProducer.sendUserDataSync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
       userDataProducer.sendUserDataAsync(String.valueOf(cnt), "message : " + cnt + " / Mesage can be objects.");
       userDataProducer.sendUserDataCommit(String.valueOf(cnt), "message : " + cnt + " / Mesage can be objects.");
-      Thread.sleep(500);
+      // Thread.sleep(100);
     }
     userDataProducer.close();
 
