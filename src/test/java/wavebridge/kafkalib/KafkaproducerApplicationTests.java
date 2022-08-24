@@ -5,7 +5,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.junit.jupiter.api.Test;
 
-import wavebridge.kafkalib.producer.MessageProducer;
+import wavebridge.kafkalib.producer.AsyncProducer;
+import wavebridge.kafkalib.producer.SyncProducer;
+import wavebridge.kafkalib.producer.TransactionalProducer;
 import wavebridge.kafkalib.util.ProducerProperties;
 
 @SpringBootTest
@@ -25,17 +27,32 @@ class KafkaproducerApplicationTests {
   }
 
   @Test
-  public void testSyncProducer() throws Exception {
-    MessageProducer userDataProducer = MessageProducer.getInstance();
+  public void testProducer() throws Exception {
+    AsyncProducer asyncProducer = AsyncProducer.getInstance();
 
     int cnt = 0;
     while(cnt < 5) {
-      userDataProducer.sendUserDataSync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
-      userDataProducer.sendUserDataAsync(String.valueOf(cnt), "message : " + cnt + " / Mesage can be objects.");
-      userDataProducer.sendUserDataCommit(String.valueOf(cnt), "message : " + cnt + " / Mesage can be objects.");
+      asyncProducer.sendUserDataAsync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
+      Thread.sleep(1000);
+    }
+    asyncProducer.close();
+
+    SyncProducer syncProducer = SyncProducer.getInstance();
+
+    cnt = 0;
+    while(cnt < 5) {
+      syncProducer.sendUserDataSync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
       // Thread.sleep(100);
     }
-    userDataProducer.close();
+    syncProducer.close();
+
+    TransactionalProducer transactionalProducer = TransactionalProducer.getInstance();
+
+    cnt = 0;
+    while(cnt < 5) {
+      transactionalProducer.sendUserDataCommit(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
+      // Thread.sleep(100);
+    }
 
   }
 }

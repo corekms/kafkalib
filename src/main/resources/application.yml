@@ -11,9 +11,27 @@ producer:
   bootstrap-servers: 172.16.60.188:9092,172.16.60.225:9092,172.16.60.187:9092
   acks: all
   key-serializer: org.apache.kafka.common.serialization.StringSerializer
-  value-serializer: wavebridge.kafkalib.producer.CustomSerializer
+  value-serializer: org.apache.kafka.common.serialization.StringSerializer
   enable-idempotence: true
   max-in-flight-requests-per-connection: 5
   retries: 5
   transaction-id-prefix: ${random.uuid}
   topic-name: "topic-udp-ccxt-balance"
+consumer:
+  bootstrap-servers: 172.16.60.188:9092,172.16.60.225:9092,172.16.60.187:9092
+  key-deserializer: org.apache.kafka.common.serialization.StringSerializer
+  value-deserializer: org.apache.kafka.common.serialization.StringSerializer
+  fetch-min-bytes: 
+  group-id: data-loader
+  heartbeat-interval-ms: 60000
+  max-partition-fetch-bytes:
+  session-timeout-ms: 180000
+  enable-auto-commit: false
+  auto-offset-reset: none
+  fetch-max-bytes:
+  group-instance-id:
+  isolation-level: read-committed
+  max-poll-records: 1
+  partition-assignment-strategy: range
+  fetch-max-wait-ms:
+  topic-name:
