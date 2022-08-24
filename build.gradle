@@ -1,0 +1,45 @@
+plugins {
+	id 'org.springframework.boot' version '2.7.2'
+	id 'io.spring.dependency-management' version '1.0.12.RELEASE'
+	id 'java'
+}
+
+group = 'wavebridge'
+version = '0.0.1-SNAPSHOT'
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories {
+  mavenCentral()
+  maven {
+    url "${nexusUrl}/content/groups/public/"
+    credentials {
+      username "${nexusUsername}"
+      password "${nexusPassword}"
+    }
+  }
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter'
+  implementation 'org.springframework.kafka:spring-kafka'
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.springframework.kafka:spring-kafka-test'
+
+  implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.1'
+
+  // implementation group: 'org.slf4j', name: 'slf4j-simple'
+  compileOnly group: 'org.projectlombok', name: 'lombok'
+  annotationProcessor group: 'org.projectlombok', name: 'lombok'
+}
+
+tasks.named('test') {
+  useJUnitPlatform()
+}
+
+bootJar {
+  enabled = false
+}
