@@ -1,4 +1,4 @@
-package wavebridge.kafkaproducer;
+package wavebridge.kafkalib;
 
 import org.apache.kafka.clients.producer.Callback;
 import org.apache.kafka.clients.producer.ProducerRecord;

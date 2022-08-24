@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: dev
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+producer:
+  bootstrap-servers: 172.16.60.188:9092,172.16.60.225:9092,172.16.60.187:9092
+  acks: all
+  key-serializer: org.apache.kafka.common.serialization.StringSerializer
+  value-serializer: wavebridge.kafkalib.CustomSerializer
+  enable-idempotence: true
+  max-in-flight-requests-per-connection: 5
+  retries: 5
+  transaction-id-prefix: ${random.uuid}
+  topic-name: "topic-udp-ccxt-balance"
