@@ -24,7 +24,7 @@ public class AsyncProducer {
   }
 
   // 비동기 전송/콜백(예외처리필요)
-  public void sendUserDataAsync(String key, Object messageToSend, String topicName) throws Exception{
+  public void sendUserDataAsync(String key, Object messageToSend, String topicName) throws Exception {
     try {
       ProducerRecord<String, Object> record = new ProducerRecord<>(topicName, key, messageToSend);
       producer.send(record, new ProducerCallback(record));
@@ -33,7 +33,7 @@ public class AsyncProducer {
     }
   }
 
-  public void sendUserDataAsync(String key, Object messageToSend) throws Exception{
+  public void sendUserDataAsync(String key, Object messageToSend) throws Exception {
     sendUserDataAsync(key, messageToSend, topicName);
   }
 
