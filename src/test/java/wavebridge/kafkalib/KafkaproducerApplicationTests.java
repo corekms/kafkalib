@@ -116,7 +116,7 @@ class KafkaproducerApplicationTests {
     // At-Least Once : 매세지 중복 X, 메세지 유실 가능
     AsyncProducer asyncProducer = AsyncProducer.getInstance();
     int cnt = 0;
-    while(cnt < 1000) {
+    while(cnt < 100) {
       asyncProducer.sendUserDataAsync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
       // Thread.sleep(100);
     }
