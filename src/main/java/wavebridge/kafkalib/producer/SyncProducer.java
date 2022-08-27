@@ -23,7 +23,7 @@ public class SyncProducer {
     return InstanceHolder.producerInstance;
   }
 
-    /* 
+  /* 
    * 동기전송
    * ACK 설정에 따라 브로커 응답을 대기함
    * [ACK : 1]  리더 파티션 수신 후 응답(브로커 -> 프로듀서)
