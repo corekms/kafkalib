@@ -10,7 +10,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import wavebridge.kafkalib.util.ConsumerProperties;
 
 public class AutoCommitConsumer {
-  private static final KafkaConsumer<String, String> consumer = new KafkaConsumer<>(ConsumerProperties.getConsumerProperties());
+  private static final KafkaConsumer<String, String> consumer = new KafkaConsumer<>(ConsumerProperties.getAutoCommitConsumerProperties());
   private static class InstanceHoler {
     public static AutoCommitConsumer consmuerInstance = new AutoCommitConsumer();
   }

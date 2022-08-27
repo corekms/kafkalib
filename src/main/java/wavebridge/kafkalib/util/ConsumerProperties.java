@@ -22,10 +22,9 @@ public class ConsumerProperties {
   static private String TOPIC_NAME;
   static private String POLLING_DURATION_MS;
   static private Properties PROP = new Properties();
-  static private Properties AUTOCOMMITPROP = new Properties();
-  static private Properties SYNCPROP = new Properties();
-  static private Properties ASYNCPROP = new Properties();
-  static private Properties TRANSACTIONALPROP = new Properties();
+  static private Properties AUTO_COMMIT_PROP = new Properties();
+  static private Properties MANNUAL_COMMIT_PROP = new Properties();
+  static private Properties TRANSACTIONAL_PROP = new Properties();
 
   @PostConstruct
   void initProperties() {
@@ -38,25 +37,32 @@ public class ConsumerProperties {
     PROP.setProperty("auto.offset.reset",this.autoOffsetReset);
     // PROP.setProperty("partition.assignment.strategy",this.partitionAssignmentStrategy);
 
-    AUTOCOMMITPROP = (Properties)PROP.clone();
-    AUTOCOMMITPROP.setProperty("enable.auto.commit", "true");
+    AUTO_COMMIT_PROP = (Properties)PROP.clone();
+    AUTO_COMMIT_PROP.setProperty("enable.auto.commit", "true");
 
-    SYNCPROP = (Properties)PROP.clone();
-    SYNCPROP.setProperty("enable.auto.commit", "false");
+    MANNUAL_COMMIT_PROP = (Properties)PROP.clone();
+    MANNUAL_COMMIT_PROP.setProperty("enable.auto.commit", "false");
 
-    ASYNCPROP = (Properties)PROP.clone();
-    ASYNCPROP.setProperty("enable.auto.commit", "false");
-
-    TRANSACTIONALPROP = (Properties)PROP.clone();
-    TRANSACTIONALPROP.setProperty("enable.auto.commit", "false");
-    TRANSACTIONALPROP.setProperty("isolation.level", "read_commited");
+    TRANSACTIONAL_PROP = (Properties)MANNUAL_COMMIT_PROP.clone();
+    TRANSACTIONAL_PROP.setProperty("isolation.level", "read_commited");
   }
-
   
   public static Properties getConsumerProperties() {
     return PROP;
   }
-  
+
+  public static Properties getAutoCommitConsumerProperties() {
+    return AUTO_COMMIT_PROP;
+  }
+
+  public static Properties getManualCommitConsumerProperties() {
+    return MANNUAL_COMMIT_PROP;
+  }
+
+  public static Properties getTransactionalConsumerProperties() {
+    return TRANSACTIONAL_PROP;
+  }
+
   public static String getTopicName() {
     return TOPIC_NAME;
   }
