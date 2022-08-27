@@ -58,7 +58,7 @@ class KafkaproducerApplicationTests {
     t1.start();
     AutoCommitConsumer autoCommitConsumer = AutoCommitConsumer.getInstance();
     while(true) {
-      autoCommitConsumer.pollAutoCommit();
+      autoCommitConsumer.pollWithoutCommit();
     }
   }
 
@@ -71,6 +71,6 @@ class KafkaproducerApplicationTests {
   @Test
   // Sync commit 모드 : 브로커로 commit 요청 후 응답을 기다림.
   void testSyncCommitConsumer() throws Exception {
-    
+
   }
 }

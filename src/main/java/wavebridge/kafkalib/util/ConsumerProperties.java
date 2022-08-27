@@ -143,13 +143,4 @@ public class ConsumerProperties {
   public void setAutoOffsetReset(String autoOffsetReset) {
     this.autoOffsetReset = autoOffsetReset;
   }
-
-  // public String getPartitionAssignmentStrategy() {
-  //   return this.partitionAssignmentStrategy;
-  // }
-
-  // @Value("${consumer.partition-assignment-strategy}")
-  // public void setPartitionAssignmentStrategy(String partitionAssignmentStrategy) {
-  //   this.partitionAssignmentStrategy = partitionAssignmentStrategy;
-  // }
 }
