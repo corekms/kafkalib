@@ -19,27 +19,31 @@ public class TransactionalProducer {
     log.debug("===========================================================");
     log.debug("Initializing UserDataProducer : producer : {}", producer.hashCode());
     log.debug("===========================================================");
+    producer.initTransactions();
     return InstanceHolder.producerInstance;
   }
 
   public void sendUserDataCommit(String key, Object messageToSend, String topicName) throws Exception{
-    Producer<String, Object> transactionalProducer = new KafkaProducer<>(ProducerProperties.getTransactionalProperties());
-    transactionalProducer.initTransactions(); 
-    transactionalProducer.beginTransaction();
+    // Producer<String, Object> transactionalProducer = new KafkaProducer<>(ProducerProperties.getTransactionalProperties()); 
+    producer.beginTransaction();
     try {
       ProducerRecord<String, Object> record = new ProducerRecord<>(topicName, key, messageToSend);
-      transactionalProducer.send(record);
-      transactionalProducer.flush();
+      producer.send(record);
+      producer.flush();
     } catch (Exception e) {
-      transactionalProducer.abortTransaction();
+      producer.abortTransaction();
       log.error("Exception occured while sending message with transaction... transaction aborted: {}", e);
     } finally {
-      transactionalProducer.commitTransaction();      
-      transactionalProducer.close();
+      producer.commitTransaction();      
+      // producer.close();
     }
   }
 
   public void sendUserDataCommit(String key, Object messageToSend) throws Exception{
     sendUserDataCommit(key, messageToSend, topicName);
+  }
+
+  public void close() throws Exception {
+    TransactionalProducer.producer.close();
   }
 }

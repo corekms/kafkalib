@@ -25,6 +25,7 @@ public class ConsumerProperties {
   static private Properties AUTOCOMMITPROP = new Properties();
   static private Properties SYNCPROP = new Properties();
   static private Properties ASYNCPROP = new Properties();
+  static private Properties TRANSACTIONALPROP = new Properties();
 
   @PostConstruct
   void initProperties() {
@@ -45,6 +46,10 @@ public class ConsumerProperties {
 
     ASYNCPROP = (Properties)PROP.clone();
     ASYNCPROP.setProperty("enable.auto.commit", "false");
+
+    TRANSACTIONALPROP = (Properties)PROP.clone();
+    TRANSACTIONALPROP.setProperty("enable.auto.commit", "false");
+    TRANSACTIONALPROP.setProperty("isolation.level", "read_commited");
   }
 
   
