@@ -22,9 +22,11 @@ public class TransactionalProducer {
     producer.initTransactions();
     return InstanceHolder.producerInstance;
   }
-
+/*
+ * Exactly Once : 메세지 중복 없음, 메세지 유실 없음.(재시도)
+ * 브로커의 트랜잭션 코디네이터와 프로듀서 간 트랙잭션 정보를 교환.(느림)
+ */
   public void sendUserDataCommit(String key, Object messageToSend, String topicName) throws Exception{
-    // Producer<String, Object> transactionalProducer = new KafkaProducer<>(ProducerProperties.getTransactionalProperties()); 
     producer.beginTransaction();
     try {
       ProducerRecord<String, Object> record = new ProducerRecord<>(topicName, key, messageToSend);
@@ -35,7 +37,6 @@ public class TransactionalProducer {
       log.error("Exception occured while sending message with transaction... transaction aborted: {}", e);
     } finally {
       producer.commitTransaction();      
-      // producer.close();
     }
   }
 
@@ -44,6 +45,6 @@ public class TransactionalProducer {
   }
 
   public void close() throws Exception {
-    TransactionalProducer.producer.close();
+    producer.close();
   }
 }

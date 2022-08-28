@@ -1,5 +1,6 @@
 package wavebridge.kafkalib.util;
 
+import java.time.Duration;
 import java.util.Properties;
 import javax.annotation.PostConstruct;
 
@@ -20,7 +21,7 @@ public class ConsumerProperties {
   // private String partitionAssignmentStrategy; 
   
   static private String TOPIC_NAME;
-  static private String POLLING_DURATION_MS;
+  static private Duration POLLING_DURATION_MS;
   static private Properties PROP = new Properties();
   static private Properties AUTO_COMMIT_PROP = new Properties();
   static private Properties MANNUAL_COMMIT_PROP = new Properties();
@@ -72,13 +73,13 @@ public class ConsumerProperties {
     ConsumerProperties.TOPIC_NAME = topicName;
   }
 
-  public static String getPollingIntervalMs() {
+  public static Duration getPollingIntervalMs() {
     return POLLING_DURATION_MS;
   }
 
   @Value("${consumer.polling-duration-ms}") 
   public void setPollingIntervalMs(String pollingIntervalMs){
-    ConsumerProperties.POLLING_DURATION_MS = pollingIntervalMs;
+    ConsumerProperties.POLLING_DURATION_MS = Duration.parse(pollingIntervalMs);
   }
 
   public String getBootstrapServers() {

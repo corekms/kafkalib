@@ -25,6 +25,7 @@ public class SyncProducer {
 
   /* 
    * 동기전송
+   * At-most Once : 메세지 중복 가능, 메세지 유실은 없음
    * ACK 설정에 따라 브로커 응답을 대기함
    * [ACK : 1]  리더 파티션 수신 후 응답(브로커 -> 프로듀서)
    * [ACK : 2]  리더 파티션 + 하나의 팔로워 파티션 수신 후 응답(브로커 -> 프로듀서)
@@ -33,7 +34,7 @@ public class SyncProducer {
   public void sendUserDataSync(String key, Object messageToSend, String topicName) throws Exception{
     try {
       ProducerRecord<String, Object> record = new ProducerRecord<>(topicName, key, messageToSend);
-      RecordMetadata metadata = producer.send(record).get();
+      RecordMetadata metadata = producer.send(record).get(); // Blocking
       log.debug("Topic: {}, Partition: {}, Offset: {}, Key: {}, Received Message: {}\n", 
         metadata.topic(), metadata.partition(), metadata.offset(), record.key(), record.value());
     } catch (Exception e) {
@@ -46,6 +47,6 @@ public class SyncProducer {
   }
 
   public void close() {
-    SyncProducer.producer.close();
+    producer.close();
   }
 }

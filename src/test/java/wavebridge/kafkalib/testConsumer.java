@@ -8,10 +8,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.junit.jupiter.api.Test;
 
 import wavebridge.kafkalib.consumer.AutoCommitConsumer;
-import wavebridge.kafkalib.producer.AsyncProducer;
+import wavebridge.kafkalib.consumer.ManualCommitConsumer;
 import wavebridge.kafkalib.producer.SyncProducer;
-import wavebridge.kafkalib.producer.TransactionalProducer;
-import wavebridge.kafkalib.util.ProducerProperties;
 import wavebridge.kafkalib.util.ConsumerProperties;
 
 @SpringBootTest
@@ -33,16 +31,16 @@ class KafkaproducerApplicationTests {
     assertEquals("topic-udp-ccxt-balance", ConsumerProperties.getTopicName());
   }
  
-  public class prodceToTestConsumer implements Runnable {
+  public class produceToTestConsumer implements Runnable {
     @Override
     public void run() {
-      AsyncProducer producer = AsyncProducer.getInstance();
+      SyncProducer producer = SyncProducer.getInstance();
       // SyncProducer producer = SyncProducer.getInstance();
       // TransactionalProducer transactionalProducer = TransactionalProducer.getInstance();
       int cnt = 0;
       try {
         while(cnt < 1000) {
-          producer.sendUserDataAsync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
+          producer.sendUserDataSync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
           Thread.sleep(100);
         } 
       }
@@ -54,23 +52,34 @@ class KafkaproducerApplicationTests {
   @Test
   // Auto-commit 모드 : 백그라운드로 일정 메세지 간격으로 자동 커밋
   void testConsumer() throws Exception {
-    Thread t1 = new Thread(new prodceToTestConsumer());
+    int i=0;
+    Thread t1 = new Thread(new produceToTestConsumer());
     t1.start();
     AutoCommitConsumer autoCommitConsumer = AutoCommitConsumer.getInstance();
+    do {
+      autoCommitConsumer.pollAutoCommit();
+      i++;
+    } while(i<1000);
+    autoCommitConsumer.close();
+  }
+
+  @Test
+  // Async Commit 모드 : 브로커로 commit 요청 후 응답을 기다리지 않음.(Non-blocking Method)
+  // ACK 수신하지 못해도 pass / 예외처리는 별도 callback으로도 가능.
+  // pass 일경우 다음 commit 요청에 대한 응답으로 갈음.
+  void testManualCommitConsumer() throws Exception {
+    Thread t1 = new Thread(new produceToTestConsumer());
+    t1.start();
+    ManualCommitConsumer manualCommitConsumer = ManualCommitConsumer.getInstance();
     while(true) {
-      autoCommitConsumer.pollWithoutCommit();
+      manualCommitConsumer.pollAndCommit(false);
     }
   }
 
   @Test
-  // Async Commit 모드 : 브로커로 commit 요청 후 응답을 기다리지 않음
-  void testAsyncCommitConsumer() throws Exception {
-
-  }
-
-  @Test
-  // Sync commit 모드 : 브로커로 commit 요청 후 응답을 기다림.
-  void testSyncCommitConsumer() throws Exception {
+  // Sync commit 모드 : 브로커로 commit 요청 후 응답을 기다림.(Blocking-Method)
+  // ACK 신호를 수신하지 못하면 Exception 발생
+  void testTransactionalConsumer() throws Exception {
 
   }
 }

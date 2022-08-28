@@ -24,8 +24,4 @@ public class CustomSerializer implements Serializer<Object> {
       return null;
     }
   }
-
-  @Override
-  public void close() {
-  }
 }

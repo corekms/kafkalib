@@ -12,7 +12,6 @@ import wavebridge.kafkalib.producer.AsyncProducer;
 import wavebridge.kafkalib.producer.SyncProducer;
 import wavebridge.kafkalib.producer.TransactionalProducer;
 import wavebridge.kafkalib.util.ProducerProperties;
-import wavebridge.kafkalib.util.ConsumerProperties;
 
 @SpringBootTest
 @ContextConfiguration(classes = KafkaproducerApplication.class)
@@ -30,10 +29,6 @@ class testProducer {
     System.out.println(props1.getProperty("linger.ms"));
   }
 
-  /*
-   * 용법
-   * 
-   */
   @Test
   // At-Least Once : 매세지 중복 X, 메세지 유실 가능
   public void testAsyncProducer() throws Exception {

@@ -23,11 +23,11 @@ public class AsyncProducer {
     return InstanceHolder.producerInstance;
   }
 
-  // 비동기 전송/콜백(예외처리필요)
+  // At-Least Once : 매세지 중복 X, 메세지 유실 가능
   public void sendUserDataAsync(String key, Object messageToSend, String topicName) throws Exception {
     try {
       ProducerRecord<String, Object> record = new ProducerRecord<>(topicName, key, messageToSend);
-      producer.send(record, new ProducerCallback(record));
+      producer.send(record, new ProducerCallback(record)); //Non-Blocking
     } catch (Exception e) {
       log.error("Exception occured while sending message : %s", e);
     }
@@ -38,6 +38,6 @@ public class AsyncProducer {
   }
 
   public void close() {
-    AsyncProducer.producer.close();
+    producer.close();
   }
 }
