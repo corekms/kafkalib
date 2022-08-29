@@ -1,20 +1,15 @@
 package wavebridge.kafkalib;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Properties;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
-
-import scala.util.control.Exception.Finally;
-
 import org.junit.jupiter.api.Test;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import java.util.Properties;
 
 import wavebridge.kafkalib.consumer.AutoCommitConsumer;
 import wavebridge.kafkalib.consumer.ManualCommitConsumer;
 import wavebridge.kafkalib.consumer.TransactionalConsumer;
 import wavebridge.kafkalib.producer.SyncProducer;
-import wavebridge.kafkalib.producer.TransactionalProducer;
 import wavebridge.kafkalib.util.ConsumerProperties;
 
 @SpringBootTest
@@ -36,14 +31,14 @@ class testConsumer {
     assertEquals("topic-udp-ccxt-balance", ConsumerProperties.getTopicName());
   }
  
-  public class produceToTestConsumer implements Runnable {
+  public class nonTranProducer implements Runnable {
     @Override
     public void run() {
       SyncProducer producer = SyncProducer.getInstance();
       int cnt = 0;
       try {
         while(cnt < 1000) {
-          producer.sendUserDataSync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
+          producer.sendUserDataSync(String.valueOf(++cnt % 2), "message : " + cnt + " / Mesage can be objects.");
           Thread.sleep(50);
         }
       }
@@ -57,8 +52,8 @@ class testConsumer {
   // Auto-commit 모드 : 백그라운드로 일정 메세지 간격으로 자동 커밋
   @Test
   void testAutoCommitConsumer() throws Exception {
-    Thread t1 = new Thread(new produceToTestConsumer());
-    t1.start();
+    // Thread t1 = new Thread(new nonTranProducer());
+    // t1.start();
     AutoCommitConsumer autoCommitConsumer = AutoCommitConsumer.getInstance();
     try {
       while(true) {
@@ -75,35 +70,16 @@ class testConsumer {
   // pass 일경우 다음 commit 요청에 대한 응답으로 갈음.
   @Test
   void testManualCommitConsumer() throws Exception {
-    Thread t1 = new Thread(new produceToTestConsumer());
-    t1.start();
+    // Thread t1 = new Thread(new tranProducer());
+    // t1.start();
     ManualCommitConsumer manualCommitConsumer = ManualCommitConsumer.getInstance();
     try {
       while(true) {
         manualCommitConsumer.pollAndCommit(false);
       }
-    } catch(Exception e) {} 
+    } catch(Exception e) {}
     finally {
       manualCommitConsumer.close();
-    }
-  }
-
-   
-  public class produceToTestTransactionalConsumer implements Runnable {
-    @Override
-    public void run() {
-      TransactionalProducer producer = TransactionalProducer.getInstance();
-      int cnt = 0;
-      try {
-        while(cnt < 1000) {
-          producer.sendUserDataCommit(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
-          Thread.sleep(50);
-        } 
-      }
-      catch(Exception e) {}
-      finally {
-        producer.close();
-      }
     }
   }
 
@@ -111,9 +87,8 @@ class testConsumer {
   // ACK 신호를 수신하지 못하면 Exception 발생
   @Test
   void testTransactionalConsumer() throws Exception {
-    Thread t1 = new Thread(new produceToTestConsumer());
-    t1.start();
-
+    // Thread t1 = new Thread(new tranProducer());
+    // t1.start();
     TransactionalConsumer transactionalConsumer = TransactionalConsumer.getInstance();
     try {
       while(true) {
