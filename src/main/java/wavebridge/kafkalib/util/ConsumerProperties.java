@@ -45,7 +45,7 @@ public class ConsumerProperties {
     MANNUAL_COMMIT_PROP.setProperty("enable.auto.commit", "false");
 
     TRANSACTIONAL_PROP = (Properties)MANNUAL_COMMIT_PROP.clone();
-    TRANSACTIONAL_PROP.setProperty("isolation.level", "read_commited");
+    TRANSACTIONAL_PROP.setProperty("isolation.level", "read_committed");
   }
   
   public static Properties getConsumerProperties() {
@@ -78,8 +78,8 @@ public class ConsumerProperties {
   }
 
   @Value("${consumer.polling-duration-ms}") 
-  public void setPollingIntervalMs(String pollingIntervalMs){
-    ConsumerProperties.POLLING_DURATION_MS = Duration.parse(pollingIntervalMs);
+  public void setPollingIntervalMs(Duration pollingIntervalMs){
+    ConsumerProperties.POLLING_DURATION_MS = pollingIntervalMs;
   }
 
   public String getBootstrapServers() {

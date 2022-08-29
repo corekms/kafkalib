@@ -36,7 +36,7 @@ class testProducer {
     int cnt = 0;
     while(cnt < 1000) {
       asyncProducer.sendUserDataAsync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
-      // Thread.sleep(100);
+      Thread.sleep(5);
     }
     asyncProducer.close(); // 자원회수 필수
   }

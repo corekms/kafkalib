@@ -31,7 +31,7 @@ public class SyncProducer {
    * [ACK : 2]  리더 파티션 + 하나의 팔로워 파티션 수신 후 응답(브로커 -> 프로듀서)
    * [ACK : -1 또는 all] -> 리더 파티션과 모든 팔로워 파티션 수신 후 응답(브로커 -> 프로듀서)
    */
-  public void sendUserDataSync(String key, Object messageToSend, String topicName) throws Exception{
+  public void sendUserDataSync(String key, Object messageToSend, String topicName) throws Exception {
     try {
       ProducerRecord<String, Object> record = new ProducerRecord<>(topicName, key, messageToSend);
       RecordMetadata metadata = producer.send(record).get(); // Blocking
@@ -42,11 +42,11 @@ public class SyncProducer {
     }
   }
 
-  public void sendUserDataSync(String key, Object messageToSend) throws Exception{
+  public void sendUserDataSync(String key, Object messageToSend) throws Exception {
     sendUserDataSync(key, messageToSend, topicName);
   }
 
-  public void close() {
+  public void close(){
     producer.close();
   }
 }

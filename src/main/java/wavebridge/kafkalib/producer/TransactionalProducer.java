@@ -23,7 +23,8 @@ public class TransactionalProducer {
     return InstanceHolder.producerInstance;
   }
 /*
- * Exactly Once : 메세지 중복 없음, 메세지 유실 없음.(재시도)
+ * 컨슈머 사이드에서 isolation.level을 READ_COMMIT 으로 운영하고 할때 사용한다.
+ * Exactly Once : 메세지 중복 방지를 보장
  * 브로커의 트랜잭션 코디네이터와 프로듀서 간 트랙잭션 정보를 교환.(느림)
  */
   public void sendUserDataCommit(String key, Object messageToSend, String topicName) throws Exception{
@@ -44,7 +45,7 @@ public class TransactionalProducer {
     sendUserDataCommit(key, messageToSend, topicName);
   }
 
-  public void close() throws Exception {
+  public void close() {
     producer.close();
   }
 }
