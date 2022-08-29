@@ -40,14 +40,12 @@ class testConsumer {
     @Override
     public void run() {
       SyncProducer producer = SyncProducer.getInstance();
-      // SyncProducer producer = SyncProducer.getInstance();
-      // TransactionalProducer transactionalProducer = TransactionalProducer.getInstance();
       int cnt = 0;
       try {
         while(cnt < 1000) {
           producer.sendUserDataSync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
           Thread.sleep(50);
-        } 
+        }
       }
       catch(Exception e) {}
       finally {
