@@ -23,7 +23,8 @@ consumer:
   bootstrap-servers: 172.16.60.188:9092,172.16.60.225:9092,172.16.60.187:9092
   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-  group-id: data-loader # 컨슈머가 그룹을 떠날때 불필요한 리밸런싱 동작을 회피. 재시작 시 session-timeout-ms 안에 기동 완료되어야 함.
+  group-id: data-loader # 컨슈머 그룹 식별자
+  group-instance-id: data-loader-01 # 컨슈머 식별자. 컨슈머가 그룹을 떠날때 불필요한 리밸런싱 동작을 회피. 재시작 시 session-timeout-ms 안에 기동 완료되어야 함.
   heartbeat-interval-ms: 40000
   session-timeout-ms: 120000
   auto-offset-reset: none # startup 기동간 컨슈머가 커밋한 오프셋을 찾지 못할 경우 오류를 발생시킨다. 오류발생시 latest 또는 earlist로 변경하여 띄우고 메세지 중복 또는 유실구간 backfill 필요

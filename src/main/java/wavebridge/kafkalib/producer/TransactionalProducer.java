@@ -19,6 +19,11 @@ public class TransactionalProducer {
     log.debug("===========================================================");
     log.debug("Initializing UserDataProducer : producer : {}", producer.hashCode());
     log.debug("===========================================================");
+    /*
+     * Producer.initTransaction() : transaction.id가 겹치는 다른 인스턴스의 프로듀서를 차단시킨다.
+     * 즉, 동일 브로커범위 내에서 transaction.id가 겹치는 producer 인스턴스는 생성하지 않는것이 좋다.
+     * Transactional 프로듀서를 운영코자 한다면 singleton producer를 권장한다.
+     */
     producer.initTransactions();
     return InstanceHolder.producerInstance;
   }

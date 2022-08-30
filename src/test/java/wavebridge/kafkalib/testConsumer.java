@@ -18,7 +18,9 @@ class testConsumer {
 
   @Test
   public void testConsumerProperties() throws Exception {
-    Properties consumerProperties = ConsumerProperties.getConsumerProperties();
+    Properties consumerProperties = ConsumerProperties.getAutoCommitConsumerProperties();
+    // Properties consumerProperties = ConsumerProperties.getManualCommitConsumerProperties();
+    // Properties consumerProperties = ConsumerProperties.getTransactionalConsumerProperties();
 
     assertEquals("172.16.60.188:9092,172.16.60.225:9092,172.16.60.187:9092", consumerProperties.getProperty("bootstrap.servers"));
     assertEquals("org.apache.kafka.common.serialization.StringSerializer", consumerProperties.getProperty("key.serializer"));
@@ -37,7 +39,7 @@ class testConsumer {
       SyncProducer producer = SyncProducer.getInstance();
       int cnt = 0;
       try {
-        while(cnt < 1000) {
+        while(true) {
           producer.sendUserDataSync(String.valueOf(++cnt % 2), "message : " + cnt + " / Mesage can be objects.");
           Thread.sleep(50);
         }
@@ -65,9 +67,12 @@ class testConsumer {
     }
   }
 
-  // Async Commit 모드 : 브로커로 commit 요청 후 응답을 기다리지 않음.(Non-blocking Method)
-  // ACK 수신하지 못해도 pass / 예외처리는 별도 callback으로도 가능.
-  // pass 일경우 다음 commit 요청에 대한 응답으로 갈음.
+  /*
+   * Async Commit 모드 : 브로커로 commit 요청 후 응답을 기다리지 않음.(Non-blocking Method)
+   * ACK 수신하지 못해도 pass / 예외처리는 별도 callback으로도 가능.
+   * pass 일경우 다음 commit 요청에 대한 응답으로 갈음.
+   * Sync commit 모드 : 브로커로 commit 요청 후 응답을 기다림.(Blocking-Method)
+   */
   @Test
   void testManualCommitConsumer() throws Exception {
     // Thread t1 = new Thread(new tranProducer());
@@ -83,7 +88,6 @@ class testConsumer {
     }
   }
 
-  // Sync commit 모드 : 브로커로 commit 요청 후 응답을 기다림.(Blocking-Method)
   // ACK 신호를 수신하지 못하면 Exception 발생
   @Test
   void testTransactionalConsumer() throws Exception {

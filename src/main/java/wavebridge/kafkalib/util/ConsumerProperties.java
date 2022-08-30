@@ -18,14 +18,10 @@ public class ConsumerProperties {
   private String heartbeatIntervalms;
   private String sessionTimeoutMs;
   private String autoOffsetReset;
-  // private String partitionAssignmentStrategy; 
   
   static private String TOPIC_NAME;
   static private Duration POLLING_DURATION_MS;
-  static private Properties PROP = new Properties();
-  static private Properties AUTO_COMMIT_PROP = new Properties();
-  static private Properties MANNUAL_COMMIT_PROP = new Properties();
-  static private Properties TRANSACTIONAL_PROP = new Properties();
+  static private final Properties PROP = new Properties();
 
   @PostConstruct
   void initProperties() {
@@ -36,32 +32,21 @@ public class ConsumerProperties {
     PROP.setProperty("heartbeat.interval.ms",this.heartbeatIntervalms);
     PROP.setProperty("session.timeout.ms",this.sessionTimeoutMs);
     PROP.setProperty("auto.offset.reset",this.autoOffsetReset);
-    // PROP.setProperty("partition.assignment.strategy",this.partitionAssignmentStrategy);
-
-    AUTO_COMMIT_PROP = (Properties)PROP.clone();
-    AUTO_COMMIT_PROP.setProperty("enable.auto.commit", "true");
-
-    MANNUAL_COMMIT_PROP = (Properties)PROP.clone();
-    MANNUAL_COMMIT_PROP.setProperty("enable.auto.commit", "false");
-
-    TRANSACTIONAL_PROP = (Properties)MANNUAL_COMMIT_PROP.clone();
-    TRANSACTIONAL_PROP.setProperty("isolation.level", "read_committed");
-  }
-  
-  public static Properties getConsumerProperties() {
-    return PROP;
   }
 
   public static Properties getAutoCommitConsumerProperties() {
-    return AUTO_COMMIT_PROP;
+    PROP.setProperty("enable.auto.commit", "true");
+    return PROP;
   }
 
   public static Properties getManualCommitConsumerProperties() {
-    return MANNUAL_COMMIT_PROP;
+    PROP.setProperty("enable.auto.commit", "false");
+    return PROP;
   }
 
   public static Properties getTransactionalConsumerProperties() {
-    return TRANSACTIONAL_PROP;
+    PROP.setProperty("isolation.level", "read_committed");
+    return PROP;
   }
 
   public static String getTopicName() {

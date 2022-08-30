@@ -10,13 +10,13 @@ import wavebridge.kafkalib.util.ConsumerProperties;
 
 public class AutoCommitConsumer {
   private static final KafkaConsumer<String, String> consumer = new KafkaConsumer<>(ConsumerProperties.getAutoCommitConsumerProperties());
-  private static class InstanceHoler {
+  private static class InstanceHolder {
     public static AutoCommitConsumer consmuerInstance = new AutoCommitConsumer();
   }
-
+  
   public static AutoCommitConsumer getInstance() {
     consumer.subscribe(Arrays.asList(ConsumerProperties.getTopicName()));
-    return InstanceHoler.consmuerInstance;
+    return InstanceHolder.consmuerInstance;
   }
 
   // Auto-commit consumer : 백그라운드에서 주기적으로 자동커밋
