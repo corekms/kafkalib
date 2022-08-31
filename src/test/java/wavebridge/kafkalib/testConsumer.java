@@ -16,6 +16,13 @@ import wavebridge.kafkalib.util.ConsumerProperties;
 @ContextConfiguration(classes = KafkaproducerApplication.class)
 class testConsumer {
 
+  static class HookThread extends Thread {
+		@Override
+		public void run() {
+			System.out.println("Running Hook");
+		}
+  }
+
   @Test
   public void testConsumerProperties() throws Exception {
     Properties consumerProperties = ConsumerProperties.getAutoCommitConsumerProperties();
@@ -59,7 +66,7 @@ class testConsumer {
     AutoCommitConsumer autoCommitConsumer = AutoCommitConsumer.getInstance();
     try {
       while(true) {
-        autoCommitConsumer.pollAutoCommit();
+        autoCommitConsumer.fetchMessage();
       }
     } catch(Exception e) {}
     finally {
@@ -80,7 +87,7 @@ class testConsumer {
     ManualCommitConsumer manualCommitConsumer = ManualCommitConsumer.getInstance();
     try {
       while(true) {
-        manualCommitConsumer.pollAndCommit(false);
+        manualCommitConsumer.fetchMessage(false);
       }
     } catch(Exception e) {}
     finally {
@@ -96,7 +103,7 @@ class testConsumer {
     TransactionalConsumer transactionalConsumer = TransactionalConsumer.getInstance();
     try {
       while(true) {
-        transactionalConsumer.pollCommittedAndCommit(true);
+        transactionalConsumer.fetchMessage(true);
       }
     } catch(Exception e) {}
     finally {

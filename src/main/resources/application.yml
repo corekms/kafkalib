@@ -16,15 +16,17 @@ producer:
   enable-idempotence: true
   max-in-flight-requests-per-connection: 5 #ack를 받지 못한 상태에서 하나의 커넥션에서 보낼 수 있는 최대 요청 수
   retries: 5 # 브로커로부터 ack 수신받지 못할경우 재시도횟수
-  transaction-id-prefix: ${random.uuid}
-consumer:
+  transaction-id-prefix: ${random.uuid} # 트랜잭션 ID 앞에 붙는 문자열. 브로커 레벨에서 중복되지 않게 설정해야 한다.
+  buffer-memory: 33554432 # 레코드 전송을 기다리기 위한 버퍼 메모리. 메세지 발생속도가 전송속도보다 빠를경우 버퍼메모리 압박이 시작될것이고, send() 등 버퍼할당이 필요한 메소드 수행간 max.block.ms(default : 1분) 동안 버퍼할당이 수행되지 않으면 exception 발생
+consumer: # 여기에 기재만 되어있고 클래스에 setter가 없는 경우는 default 를 기록하기 위함이니, 혼동하지 말것!
   topic-name: topic-udp-ccxt-balance
   polling-duration-ms: 1000
   bootstrap-servers: 172.16.60.188:9092,172.16.60.225:9092,172.16.60.187:9092
   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   group-id: data-loader # 컨슈머 그룹 식별자
-  group-instance-id: data-loader-01 # 컨슈머 식별자. 컨슈머가 그룹을 떠날때 불필요한 리밸런싱 동작을 회피. 재시작 시 session-timeout-ms 안에 기동 완료되어야 함.
   heartbeat-interval-ms: 40000
-  session-timeout-ms: 120000
+  session-timeout-ms: 120000 # 해당 시간동안 headbeat 신호를 보내지 못하면 브로커가 dead컨슈머로 간주, 그룹내에서 퇴출시킨 뒤 리밸런싱 시작. 
+  group-instance-id: data-loader-01 # 컨슈머 식별자. 컨슈머가 그룹을 떠날때 불필요한 리밸런싱 동작을 회피. 재시작 시 session-timeout-ms 안에 기동 완료되어야 함.
   auto-offset-reset: none # startup 기동간 컨슈머가 커밋한 오프셋을 찾지 못할 경우 오류를 발생시킨다. 오류발생시 latest 또는 earlist로 변경하여 띄우고 메세지 중복 또는 유실구간 backfill 필요
+  max.poll.interval.ms: 300000 # 해당 시간동안 poll() 요청을 전송하지 않으면 dead 컨슈머로 간주, 그룹내에서 리밸런싱 시작.
