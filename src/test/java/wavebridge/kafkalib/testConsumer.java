@@ -16,13 +16,6 @@ import wavebridge.kafkalib.util.ConsumerProperties;
 @ContextConfiguration(classes = KafkaproducerApplication.class)
 class testConsumer {
 
-  static class HookThread extends Thread {
-		@Override
-		public void run() {
-			System.out.println("Running Hook");
-		}
-  }
-
   @Test
   public void testConsumerProperties() throws Exception {
     Properties consumerProperties = ConsumerProperties.getAutoCommitConsumerProperties();

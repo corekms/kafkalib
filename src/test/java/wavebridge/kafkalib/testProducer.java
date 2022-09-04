@@ -7,7 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.junit.jupiter.api.Test;
 
-import wavebridge.kafkalib.consumer.AutoCommitConsumer;
 import wavebridge.kafkalib.producer.AsyncProducer;
 import wavebridge.kafkalib.producer.SyncProducer;
 import wavebridge.kafkalib.producer.TransactionalProducer;
@@ -38,7 +37,7 @@ class testProducer {
       asyncProducer.sendUserDataAsync(String.valueOf(++cnt % 2), "message : " + cnt + " / Mesage can be objects.");
       // Thread.sleep(5);
     }
-    asyncProducer.close(); // 자원회수 필수
+    asyncProducer.close();
   }
 
   @Test
@@ -50,7 +49,7 @@ class testProducer {
       syncProducer.sendUserDataSync(String.valueOf(++cnt), "message : " + cnt + " / Mesage can be objects.");
       // Thread.sleep(100);
     }
-    syncProducer.close();// 자원회수 필수
+    syncProducer.close();
   }
 
   @Test
