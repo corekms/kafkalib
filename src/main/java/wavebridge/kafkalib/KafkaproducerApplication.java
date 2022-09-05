@@ -13,9 +13,9 @@ class KafkaproducerApplication {
   public static void main(String[] args) throws Exception {
     
     SpringApplication.run(KafkaproducerApplication.class, args);
-    // AutoCommitConsumer Consumer = AutoCommitConsumer.getInstance();
+    AutoCommitConsumer Consumer = AutoCommitConsumer.getInstance();
     // ManualCommitConsumer Consumer = ManualCommitConsumer.getInstance();
-    TransactionalConsumer Consumer = TransactionalConsumer.getInstance();
+    // TransactionalConsumer Consumer = TransactionalConsumer.getInstance();
     while(true) {
       Consumer.fetchMessage();
     }

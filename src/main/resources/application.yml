@@ -20,7 +20,7 @@ producer:
   buffer-memory: 33554432 # 레코드 전송을 기다리기 위한 버퍼 메모리. 메세지 발생속도가 전송속도보다 빠를경우 버퍼메모리 압박이 시작될것이고, send() 등 버퍼할당이 필요한 메소드 수행간 max.block.ms(default : 1분) 동안 버퍼할당이 수행되지 않으면 exception 발생
 consumer: # 여기에 기재만 되어있고 클래스에 setter가 없는 경우는 default 를 기록하기 위함이니, 혼동하지 말것!
   topic-name: topic-udp-ccxt-balance
-  polling-duration-ms: 1000
+  polling-duration-ms: 50
   bootstrap-servers: 172.16.60.188:9092,172.16.60.225:9092,172.16.60.187:9092
   key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
   value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
