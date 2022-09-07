@@ -2,6 +2,7 @@ package wavebridge.kafkalib;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
 import java.util.Properties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,6 +27,58 @@ class testProducer {
     System.out.println(props1.getProperty("value.serializer"));
     System.out.println(props1.getProperty("acks"));
     System.out.println(props1.getProperty("linger.ms"));
+  }
+
+  public class NonTranProducer implements Runnable {
+    @Override
+    public void run() {
+      SyncProducer producer = SyncProducer.getInstance();
+      int cnt = 0;
+      try {
+        while(cnt<500) {
+          producer.sendUserDataSync(String.valueOf(++cnt % 2), "message : " + cnt + " / Mesage can be objects.");
+          Thread.sleep(10);
+        }
+      }
+      catch(Exception e) {}
+      finally {
+        producer.close();
+      }
+    }
+  }
+
+  public class TranProducer implements Runnable {
+    @Override
+    public void run() {
+      TransactionalProducer producer = TransactionalProducer.getInstance();
+      int cnt = 0;
+      try {
+        while(cnt<1000) {
+          producer.sendUserDataCommit(String.valueOf(++cnt % 2), "message : " + cnt + " / Mesage can be objects.");
+          Thread.sleep(50);
+        }
+      }
+      catch(Exception e) {}
+      finally {
+        producer.close();
+      }
+    }
+  }
+
+  @Test
+  // non-tran 프로듀서 쓰레드 테스트
+  public void testNonTranProducerThread() throws Exception {
+    Thread t1 = new Thread(new NonTranProducer());
+    t1.start();
+    Thread t2 = new Thread(new NonTranProducer());
+    t2.start();
+    Thread t3 = new Thread(new NonTranProducer());
+    t3.start();
+    Thread t4 = new Thread(new NonTranProducer());  
+    t4.start();
+    Thread t5 = new Thread(new NonTranProducer());
+    t5.start();
+    Thread.sleep(100000000);
   }
 
   @Test

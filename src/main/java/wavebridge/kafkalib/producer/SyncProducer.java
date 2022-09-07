@@ -46,7 +46,7 @@ public class SyncProducer {
     sendUserDataSync(key, messageToSend, topicName);
   }
 
-  public void close(){
+  public void close() {
     producer.close();
   }
 }

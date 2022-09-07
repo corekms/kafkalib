@@ -80,7 +80,8 @@ class testConsumer {
     ManualCommitConsumer manualCommitConsumer = ManualCommitConsumer.getInstance();
     try {
       while(true) {
-        manualCommitConsumer.fetchMessage(false);
+        manualCommitConsumer.fetchMessage();
+        manualCommitConsumer.commitConsumer(true);
       }
     } catch(Exception e) {}
     finally {
